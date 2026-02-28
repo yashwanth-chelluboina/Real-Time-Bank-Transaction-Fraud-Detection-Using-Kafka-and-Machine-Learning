@@ -1,0 +1,6 @@
+transaction_id,sender_account_id,recipient_account_id,amount,payment_mode,timestamp,sender_location,recipient_location,device_fingerprint,transaction_frequency,is_fraud
+T12345,SBIN00001,SBIN00010,4500.75,UPI,01-01-2025 08:15,Maharashtra,Karnataka,DF001,5,0
+T12346,HDFC00002,ICICI00011,250000,RTGS,01-01-2025 14:30,Delhi,Tamil Nadu,DF002,1,1
+T12347,ICICI00003,AXIS00012,75,UPI,02-01-2025 09:45,Gujarat,Maharashtra,DF003,12,0
+T12348,AXIS00004,HDFC00013,5000,NEFT,02-01-2025 18:20,Kerala,Uttar Pradesh,DF004,3,1
+T12349,PNB00005,PNB00014,300,IMPS,03-01-2025 07:10,Rajasthan,Rajasthan,DF005,7,0

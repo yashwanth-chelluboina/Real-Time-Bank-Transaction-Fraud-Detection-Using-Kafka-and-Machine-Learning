@@ -1,0 +1,390 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-color: #030712;
+    --surface-color: rgba(17, 24, 39, 0.7);
+    --primary-color: #0ea5e9;
+    --primary-glow: rgba(14, 165, 233, 0.6);
+    --primary-hover: #38bdf8;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(14, 165, 233, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none; /* Hide default cursor */
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: var(--bg-color);
+    /* High-tech animated grid background */
+    background-image: 
+        linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center center;
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Pulsing background glow */
+body::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+    z-index: -1;
+    animation: pulseGlow 8s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Instant Custom Cursor */
+.cursor-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px #fff, 0 0 20px var(--primary-color);
+}
+
+.cursor-trail {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    box-shadow: 0 0 15px var(--primary-glow) inset, 0 0 15px var(--primary-glow);
+}
+
+/* Smooth Entrance */
+.animate-fade-in {
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header */
+header {
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+h2.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 3rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 1.1rem;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+nav a:hover, nav a.active {
+    color: #fff;
+    text-shadow: 0 0 8px var(--primary-color);
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px var(--primary-color);
+    transform: translateX(-50%);
+}
+
+nav a:hover::before, nav a.active::before {
+    width: 100%;
+}
+
+/* Glass Cards */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.glass-card {
+    background: var(--surface-color);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 40px rgba(14, 165, 233, 0.1), inset 0 0 20px rgba(14, 165, 233, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Neon accent line on top of cards */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+.dashboard-card {
+    max-width: 1100px;
+    padding: 2.5rem;
+}
+
+.glass-card h1, .glass-card h3 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #fff;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-hover);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1.2rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-hover);
+    box-shadow: 0 0 15px var(--primary-glow);
+    background: rgba(14, 165, 233, 0.05);
+}
+
+/* Interactive Neon Button */
+.btn {
+    width: 100%;
+    padding: 1.2rem;
+    background: transparent;
+    color: var(--primary-hover);
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 0 20px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* =========================================
+   PERFORMANCE OPTIMIZED DATA TABLE (LAG FIX)
+   ========================================= */
+.table-container {
+    width: 100%;
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+    margin-top: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    
+    /* PERFORMANCE FIX 1: Solid background stops browser from recalculating blurs during scroll */
+    background: #080c16; 
+    
+    /* PERFORMANCE FIX 2: Removed inset shadows which are expensive to render */
+    position: relative;
+    
+    /* PERFORMANCE FIX 3: Force Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: transform, scroll-position;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Force backend text to be white */
+.table-container, 
+.table-container * {
+    color: #f8fafc !important; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+}
+
+th, td {
+    padding: 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+    white-space: nowrap; 
+}
+
+/* Sticky Header */
+th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    /* PERFORMANCE FIX 4: Pure solid background for sticky header */
+    background: #0f172a; 
+    
+    font-weight: 700;
+    color: var(--primary-hover) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* PERFORMANCE FIX 5: Replaced box-shadow with solid border to prevent lag */
+    border-bottom: 2px solid var(--primary-color);
+}
+
+tr:hover td {
+    background: rgba(14, 165, 233, 0.1);
+}
+
+/* =========================================
+   CUSTOM NEON SCROLLBARS
+   ========================================= */
+.table-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(3, 7, 18, 0.8);
+    border-radius: 8px;
+    border: 1px solid rgba(14, 165, 233, 0.1);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 8px;
+    border: 2px solid rgba(3, 7, 18, 0.8);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.table-container::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Visuals */
+.output-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2.5rem auto;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 30px var(--primary-glow);
+}
+
+.msg-alert {
+    text-align: center;
+    color: #f43f5e;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
+}
+
+/* Nuke center tag black font issues globally just in case */
+center font, center span {
+    color: #fff !important;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='default.css') }}">
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-trail"></div>
+
+    <header>
+        <div class="header-container">
+            <h2 class="title">Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</h2>
+            <nav>
+                <ul>
+                    <li><a href="index" class="active">Home / Data Entry</a></li>
+                    <li><a href="AdminLogin">User Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="glass-card animate-fade-in" style="max-width: 600px; width: 100%;">
+            <h3>Insert New Transaction Data</h3>
+            
+            <div class="msg-alert">
+                {{ msg|safe }}
+            </div>
+
+            <form name="dataForm" method="post" action="/AddDataAction">
+                
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" name="account_num" required autocomplete="off" placeholder="e.g., ACC-84729" />
+                </div>
+                
+                <div class="form-group">
+                    <label>Transaction Amount ($)</label>
+                    <input type="number" step="0.01" name="amount" required placeholder="e.g., 250.00" />
+                </div>
+
+                <div class="form-group">
+                    <label>Merchant Name</label>
+                    <input type="text" name="merchant" required autocomplete="off" placeholder="e.g., Amazon, Walmart" />
+                </div>
+
+                <div class="form-group">
+                    <label>Location / IP Address</label>
+                    <input type="text" name="location" required autocomplete="off" placeholder="e.g., New York, NY or 192.168.1.1" />
+                </div>
+                
+                <button type="submit" class="btn" style="margin-top: 1.5rem;">Submit to Dataset</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const dot = document.querySelector('.cursor-dot');
+        const trail = document.querySelector('.cursor-trail');
+        
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
+        });
+
+        function animateTrail() {
+            trailX += (mouseX - trailX) * 0.5;
+            trailY += (mouseY - trailY) * 0.5;
+            trail.style.transform = `translate(${trailX - 18}px, ${trailY - 18}px)`;
+            requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+        
+        const clickables = document.querySelectorAll('a, button, input');
+        clickables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                trail.style.transform += ' scale(1.8)';
+                trail.style.borderColor = '#fff';
+            });
+            el.addEventListener('mouseleave', () => {
+                trail.style.borderColor = 'var(--primary-color)';
+            });
+        });
+    </script>
+</body>
+</html>

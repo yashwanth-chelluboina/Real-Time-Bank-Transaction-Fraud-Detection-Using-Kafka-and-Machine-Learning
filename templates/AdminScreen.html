@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='default.css') }}">
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-trail"></div>
+
+    <header>
+        <div class="header-container">
+            <h2 class="title">Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</h2>
+            <nav>
+                <ul>
+                    <li><a href="Produce">Generate Kafka Producer Stream</a></li>
+                    <li><a href="Consume">Consume Data & ML Fraud Detection</a></li>
+                    <li><a href="index" style="color: #ef4444;">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main style="align-items: flex-start;">
+        <div class="glass-card dashboard-card animate-fade-in" style="width: 100%;">
+            <h3>System Console Output</h3>
+            
+            <div class="table-container">
+                {{ data|safe }}
+            </div>
+            
+            {% if img %}
+                <img class="output-img" src="data:image/png;base64, {{ img }}" alt="Data Visualization" />
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        const dot = document.querySelector('.cursor-dot');
+        const trail = document.querySelector('.cursor-trail');
+        
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+
+        // Instant tracking for the center dot
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
+        });
+
+        // Lightning-fast smooth follow for the outer ring
+        function animateTrail() {
+            // The 0.5 multiplier determines speed. Higher = faster catch-up.
+            trailX += (mouseX - trailX) * 0.5;
+            trailY += (mouseY - trailY) * 0.5;
+            trail.style.transform = `translate(${trailX - 18}px, ${trailY - 18}px)`;
+            requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+        
+        // Neon Glow effect when hovering over links and buttons
+        const clickables = document.querySelectorAll('a, button, input');
+        clickables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                trail.style.transform += ' scale(1.8)';
+                trail.style.borderColor = '#fff';
+            });
+            el.addEventListener('mouseleave', () => {
+                trail.style.borderColor = 'var(--primary-color)';
+            });
+        });
+    </script>
+</body>
+</html>
