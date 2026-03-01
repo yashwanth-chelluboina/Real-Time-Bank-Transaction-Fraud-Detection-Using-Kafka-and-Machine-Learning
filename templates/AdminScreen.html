@@ -3,37 +3,145 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</title>
+    <title>Admin Dashboard | Kafka & ML Fraud Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='default.css') }}">
+    <style>
+        .dashboard-wrapper {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .dashboard-header h3 {
+            margin-bottom: 0;
+            text-align: left;
+            font-size: 1.8rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1.2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        /* Subtle styling for Home & Data Entry so they don't distract from main actions */
+        .nav-buttons a.secondary-link {
+            font-size: 1rem;
+            padding: 0.6rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .nav-buttons a.secondary-link:hover {
+            color: #fff;
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+
+        .nav-buttons a.action-btn {
+            font-size: 1rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-buttons a.action-btn:hover {
+            background: var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .nav-buttons a.logout {
+            background: rgba(244, 63, 94, 0.1);
+            border-color: rgba(244, 63, 94, 0.3);
+            color: #f43f5e;
+        }
+
+        .nav-buttons a.logout:hover {
+            background: #f43f5e;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
     <div class="cursor-dot"></div>
     <div class="cursor-trail"></div>
 
     <header>
-        <div class="header-container">
-            <h2 class="title">Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</h2>
+        <div class="header-container" style="max-width: 1400px; flex-direction: row; justify-content: space-between;">
+            <h2 class="title" style="font-size: 1.5rem; text-align: left;">Admin Control Panel</h2>
             <nav>
-                <ul>
-                    <li><a href="Produce">Generate Kafka Producer Stream</a></li>
-                    <li><a href="Consume">Consume Data & ML Fraud Detection</a></li>
-                    <li><a href="index" style="color: #ef4444;">Logout</a></li>
+                <ul class="nav-buttons">
+                    <li><a href="/" class="secondary-link">🏠 Home</a></li>
+                    <li><a href="/data_entry" class="secondary-link">📝 Data Entry</a></li>
+                    
+                    <li><a href="/Produce" class="action-btn">🚀 Run Producer</a></li>
+                    <li><a href="/Consume" class="action-btn">🧠 Start ML Stream</a></li>
+                    <li><a href="/Logout" class="action-btn logout">🚪 Logout</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main style="align-items: flex-start;">
-        <div class="glass-card dashboard-card animate-fade-in" style="width: 100%;">
-            <h3>System Console Output</h3>
-            
-            <div class="table-container">
-                {{ data|safe }}
+    <main style="align-items: flex-start; padding-top: 2rem;">
+        <div class="dashboard-wrapper animate-fade-in">
+            <div class="glass-card" style="max-width: 100%; padding: 2.5rem;">
+                
+                {% if msg %}
+                <div class="welcome-badge">
+                    ✅ {{ msg }}
+                </div>
+                {% endif %}
+
+                <div class="dashboard-header">
+                    <h3>Live System Console</h3>
+                    <div style="font-size: 1rem; font-weight: 600; color: var(--text-muted);">
+                        System Status: <span style="color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);">● Online & Active</span>
+                    </div>
+                </div>
+                
+                <div style="width: 100%; min-height: 100px;">
+                    {{ data|safe }}
+                </div>
+                
+                {% if img %}
+                <div style="text-align: center; margin-top: 2rem;">
+                    <img class="output-img" src="data:image/png;base64, {{ img }}" alt="Data Visualization" />
+                </div>
+                {% endif %}
             </div>
-            
-            {% if img %}
-                <img class="output-img" src="data:image/png;base64, {{ img }}" alt="Data Visualization" />
-            {% endif %}
         </div>
     </main>
 
@@ -44,16 +152,13 @@
         let mouseX = 0, mouseY = 0;
         let trailX = 0, trailY = 0;
 
-        // Instant tracking for the center dot
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
         });
 
-        // Lightning-fast smooth follow for the outer ring
         function animateTrail() {
-            // The 0.5 multiplier determines speed. Higher = faster catch-up.
             trailX += (mouseX - trailX) * 0.5;
             trailY += (mouseY - trailY) * 0.5;
             trail.style.transform = `translate(${trailX - 18}px, ${trailY - 18}px)`;
@@ -61,7 +166,6 @@
         }
         animateTrail();
         
-        // Neon Glow effect when hovering over links and buttons
         const clickables = document.querySelectorAll('a, button, input');
         clickables.forEach(el => {
             el.addEventListener('mouseenter', () => {

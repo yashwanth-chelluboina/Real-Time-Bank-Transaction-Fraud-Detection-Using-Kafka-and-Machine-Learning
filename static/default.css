@@ -15,13 +15,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none; /* Hide default cursor */
+    cursor: none;
 }
 
 body {
     font-family: 'Rajdhani', sans-serif;
     background-color: var(--bg-color);
-    /* High-tech animated grid background */
     background-image: 
         linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
@@ -35,10 +34,10 @@ body {
     position: relative;
 }
 
-/* Pulsing background glow */
+/* Pulsing background glow (SCROLLING BUG FIXED HERE) */
 body::before {
     content: '';
-    position: absolute;
+    position: fixed; /* Changed from absolute to fixed */
     top: -50%;
     left: -50%;
     width: 200%;
@@ -53,7 +52,6 @@ body::before {
     100% { transform: scale(1.1); opacity: 1; }
 }
 
-/* Instant Custom Cursor */
 .cursor-dot {
     width: 6px;
     height: 6px;
@@ -76,7 +74,6 @@ body::before {
     box-shadow: 0 0 15px var(--primary-glow) inset, 0 0 15px var(--primary-glow);
 }
 
-/* Smooth Entrance */
 .animate-fade-in {
     animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -85,7 +82,6 @@ body::before {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Header */
 header {
     background: rgba(3, 7, 18, 0.8);
     backdrop-filter: blur(16px);
@@ -156,7 +152,6 @@ nav a:hover::before, nav a.active::before {
     width: 100%;
 }
 
-/* Glass Cards */
 main {
     flex: 1;
     display: flex;
@@ -181,7 +176,6 @@ main {
     overflow: hidden;
 }
 
-/* Neon accent line on top of cards */
 .glass-card::before {
     content: '';
     position: absolute;
@@ -207,7 +201,6 @@ main {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Forms */
 .form-group {
     margin-bottom: 1.8rem;
     display: flex;
@@ -242,7 +235,6 @@ main {
     background: rgba(14, 165, 233, 0.05);
 }
 
-/* Interactive Neon Button */
 .btn {
     width: 100%;
     padding: 1.2rem;
@@ -271,9 +263,6 @@ main {
     box-shadow: 0 0 10px var(--primary-glow);
 }
 
-/* =========================================
-   PERFORMANCE OPTIMIZED DATA TABLE (LAG FIX)
-   ========================================= */
 .table-container {
     width: 100%;
     max-height: 500px;
@@ -282,20 +271,13 @@ main {
     margin-top: 2rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    
-    /* PERFORMANCE FIX 1: Solid background stops browser from recalculating blurs during scroll */
     background: #080c16; 
-    
-    /* PERFORMANCE FIX 2: Removed inset shadows which are expensive to render */
     position: relative;
-    
-    /* PERFORMANCE FIX 3: Force Hardware Acceleration */
     transform: translateZ(0);
     will-change: transform, scroll-position;
     -webkit-overflow-scrolling: touch;
 }
 
-/* Force backend text to be white */
 .table-container, 
 .table-container * {
     color: #f8fafc !important; 
@@ -314,19 +296,15 @@ th, td {
     white-space: nowrap; 
 }
 
-/* Sticky Header */
 th {
     position: sticky;
     top: 0;
     z-index: 10;
-    /* PERFORMANCE FIX 4: Pure solid background for sticky header */
     background: #0f172a; 
-    
     font-weight: 700;
     color: var(--primary-hover) !important;
     text-transform: uppercase;
     letter-spacing: 1px;
-    /* PERFORMANCE FIX 5: Replaced box-shadow with solid border to prevent lag */
     border-bottom: 2px solid var(--primary-color);
 }
 
@@ -334,9 +312,6 @@ tr:hover td {
     background: rgba(14, 165, 233, 0.1);
 }
 
-/* =========================================
-   CUSTOM NEON SCROLLBARS
-   ========================================= */
 .table-container::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -363,7 +338,6 @@ tr:hover td {
     background: transparent;
 }
 
-/* Visuals */
 .output-img {
     display: block;
     max-width: 100%;
@@ -384,7 +358,6 @@ tr:hover td {
     text-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
 }
 
-/* Nuke center tag black font issues globally just in case */
 center font, center span {
     color: #fff !important;
 }

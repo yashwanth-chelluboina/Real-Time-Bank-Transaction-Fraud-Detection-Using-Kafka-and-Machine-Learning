@@ -3,8 +3,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</title>
+    <title>Real-Time Fraud Detection | Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='default.css') }}">
+    <style>
+        /* Additional inline styles for the new home page layout */
+        .hero { text-align: center; margin-bottom: 3rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-color, #ffffff); }
+        .hero p { font-size: 1.1rem; color: #cccccc; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature-card { padding: 1.5rem; text-align: left; }
+        .feature-card h4 { color: #4facfe; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .feature-card p { font-size: 0.95rem; color: #dddddd; line-height: 1.5; }
+        .cta-container { text-align: center; margin-top: 3rem; }
+        
+        /* 🔴 FIX: Dedicated style for the homepage button so it doesn't stretch to 100% width */
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg, var(--primary-color), #3b82f6);
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            letter-spacing: 1px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.8);
+            border-color: #fff;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="cursor-dot"></div>
@@ -12,52 +46,51 @@
 
     <header>
         <div class="header-container">
-            <h2 class="title">Real Time Bank Transaction Fraud Detection Using Kafka and Machine Learning</h2>
+            <h2 class="title">Kafka & ML Fraud Detection</h2>
             <nav>
                 <ul>
-                    <li><a href="index" class="active">Home / Data Entry</a></li>
-                    <li><a href="AdminLogin">User Login</a></li>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/data_entry">Data Entry</a></li>
+                    <li><a href="/AdminLogin">User Login</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <div class="glass-card animate-fade-in" style="max-width: 600px; width: 100%;">
-            <h3>Insert New Transaction Data</h3>
+        <div class="hero animate-fade-in">
+            <h1>Next-Generation Bank Transaction Security</h1>
+            <p>
+                In an era of instant digital payments, traditional batch-processing fraud detection falls short. 
+                Our system leverages the high-throughput, low-latency capabilities of <strong>Apache Kafka</strong> 
+                combined with advanced <strong>Machine Learning</strong> algorithms to identify and intercept anomalous transactions in real-time.
+            </p>
+        </div>
+
+        <div class="features-grid animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="glass-card feature-card">
+                <h4>🚀 Real-Time Streaming</h4>
+                <p>Utilizing Apache Kafka, the system ingests massive volumes of transactional data with near-zero latency, ensuring that no transaction goes unchecked.</p>
+            </div>
             
-            <div class="msg-alert">
-                {{ msg|safe }}
+            <div class="glass-card feature-card">
+                <h4>🧠 Predictive Analytics</h4>
+                <p>Trained on vast historical datasets, our Machine Learning models evaluate complex behavioral patterns to accurately distinguish between legitimate spending and fraudulent activity.</p>
             </div>
 
-            <form name="dataForm" method="post" action="/AddDataAction">
-                
-                <div class="form-group">
-                    <label>Account Number</label>
-                    <input type="text" name="account_num" required autocomplete="off" placeholder="e.g., ACC-84729" />
-                </div>
-                
-                <div class="form-group">
-                    <label>Transaction Amount ($)</label>
-                    <input type="number" step="0.01" name="amount" required placeholder="e.g., 250.00" />
-                </div>
+            <div class="glass-card feature-card">
+                <h4>🛡️ Instant Mitigation</h4>
+                <p>By detecting anomalies the moment they occur, the system provides actionable alerts, allowing financial institutions to block threats before the transaction settles.</p>
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label>Merchant Name</label>
-                    <input type="text" name="merchant" required autocomplete="off" placeholder="e.g., Amazon, Walmart" />
-                </div>
-
-                <div class="form-group">
-                    <label>Location / IP Address</label>
-                    <input type="text" name="location" required autocomplete="off" placeholder="e.g., New York, NY or 192.168.1.1" />
-                </div>
-                
-                <button type="submit" class="btn" style="margin-top: 1.5rem;">Submit to Dataset</button>
-            </form>
+        <div class="cta-container animate-fade-in" style="animation-delay: 0.4s;">
+            <a href="/data_entry" class="cta-button">⚡ SIMULATE LIVE TRANSACTION</a>
         </div>
     </main>
 
     <script>
+        // Custom Cursor Script
         const dot = document.querySelector('.cursor-dot');
         const trail = document.querySelector('.cursor-trail');
         
@@ -78,7 +111,7 @@
         }
         animateTrail();
         
-        const clickables = document.querySelectorAll('a, button, input');
+        const clickables = document.querySelectorAll('a, button, input, .cta-button');
         clickables.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 trail.style.transform += ' scale(1.8)';

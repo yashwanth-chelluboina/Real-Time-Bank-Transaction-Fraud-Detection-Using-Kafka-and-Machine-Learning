@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Transaction | Fraud Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='default.css') }}">
+    <style>
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-grid .form-group { margin-bottom: 0; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+        
+        .datetime-helper {
+            width: 50px; padding: 0 0.8rem; cursor: pointer; color: transparent;
+            background: rgba(14, 165, 233, 0.1);
+        }
+        .datetime-helper::-webkit-calendar-picker-indicator {
+            filter: invert(1); cursor: pointer; width: 24px; height: 24px; margin: 0; padding: 0;
+        }
+        .datetime-helper:hover { background: rgba(14, 165, 233, 0.3); box-shadow: 0 0 10px var(--primary-glow); }
+        
+        .api-card {
+            border-top: 2px solid #10b981;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        select.custom-select {
+            width: 100%; padding: 1.2rem; background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color); border-radius: 6px;
+            color: #fff; font-size: 1.1rem;
+        }
+        select.custom-select:focus { outline: none; border-color: var(--primary-hover); box-shadow: 0 0 15px var(--primary-glow); }
+        select.custom-select option { background: #0f172a; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-trail"></div>
+
+    <header>
+        <div class="header-container">
+            <h2 class="title">Kafka & ML Fraud Detection</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/data_entry" class="active">Data Entry</a></li>
+                    <li><a href="/AdminLogin">User Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main style="flex-direction: column;">
+        <div class="glass-card animate-fade-in" style="max-width: 800px; width: 100%; margin: 0 auto; padding: 2.5rem;">
+            <h3>Manual Transaction Entry</h3>
+            <p style="text-align: center; color: #ccc; margin-bottom: 2rem; font-size: 0.95rem;">Enter data manually and label it properly to append to your dataset.</p>
+            
+            <div id="toast" class="msg-alert" style="display: none; padding: 12px; border-radius: 6px; margin-bottom: 20px;"></div>
+
+            <form id="transactionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Transaction ID</label>
+                        <input type="text" id="transaction_id" required autocomplete="off" placeholder="e.g., T12347" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sender Account ID</label>
+                        <input type="text" id="sender_account_id" required autocomplete="off" placeholder="e.g., SBIN00001" />
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Account ID</label>
+                        <input type="text" id="recipient_account_id" required autocomplete="off" placeholder="e.g., AXIS00012" />
+                    </div>
+                    <div class="form-group">
+                        <label>Transaction Amount</label>
+                        <input type="number" id="amount" step="0.01" required placeholder="e.g., 197056.75" />
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <input type="text" id="payment_mode" required autocomplete="off" placeholder="e.g., UPI, Credit Card" />
+                    </div>
+                    <div class="form-group">
+                        <label>Timestamp <span style="font-size: 0.8rem; color: var(--text-muted);">(DD-MM-YYYY HH:MM)</span></label>
+                        <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+                            <input type="text" id="timestamp" required autocomplete="off" placeholder="03-01-2025 07:10" style="flex: 1;" />
+                            <input type="datetime-local" id="timestamp_picker" class="datetime-helper" title="Select from Calendar" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sender Location</label>
+                        <input type="text" id="sender_location" required autocomplete="off" placeholder="e.g., Gujarat" />
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Location</label>
+                        <input type="text" id="recipient_location" required autocomplete="off" placeholder="e.g., Rajasthan" />
+                    </div>
+                    <div class="form-group">
+                        <label>Device Fingerprint</label>
+                        <input type="text" id="device_fingerprint" required autocomplete="off" placeholder="e.g., DF005" />
+                    </div>
+                    <div class="form-group">
+                        <label>Transaction Frequency</label>
+                        <input type="number" id="transaction_frequency" required placeholder="e.g., 11" />
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label style="color: #10b981;">Actual Transaction Status (For Dataset Labeling)</label>
+                    <select id="is_fraud" class="custom-select">
+                        <option value="0">✅ Normal Transaction (0)</option>
+                        <option value="1">🚨 Fraudulent Transaction (1)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="btn" style="margin-top: 2rem; width: 100%;">
+                    <span id="btnText">Submit Full Record</span>
+                    <span id="spinner" style="display: none;">🔄 Processing & Saving...</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="glass-card api-card animate-fade-in" style="max-width: 800px; width: 100%; margin: 2rem auto; padding: 2.5rem;">
+            <h3>🏦 Bank API Integration (Simulation)</h3>
+            <p style="color: #ccc; margin-bottom: 1.5rem; font-size: 0.95rem;">Fetch live simulated data from the central banking API. This automatically generates realistic transactions, pushes them to the Kafka stream, and appends them to your dataset.</p>
+            
+            <button id="apiBtn" class="btn" style="background: linear-gradient(90deg, #10b981, #059669); border: none; max-width: 350px; margin: 0 auto; display: block;">
+                <span id="apiBtnText">🌐 Fetch Live API Data</span>
+                <span id="apiSpinner" style="display: none;">🔄 Establishing Connection...</span>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Visuals
+        const dot = document.querySelector('.cursor-dot');
+        const trail = document.querySelector('.cursor-trail');
+        let mouseX = 0, mouseY = 0, trailX = 0, trailY = 0;
+        window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`; });
+        function animateTrail() { trailX += (mouseX - trailX) * 0.5; trailY += (mouseY - trailY) * 0.5; trail.style.transform = `translate(${trailX - 18}px, ${trailY - 18}px)`; requestAnimationFrame(animateTrail); }
+        animateTrail();
+        const clickables = document.querySelectorAll('a, button, input, select');
+        clickables.forEach(el => { el.addEventListener('mouseenter', () => { trail.style.transform += ' scale(1.8)'; trail.style.borderColor = '#fff'; }); el.addEventListener('mouseleave', () => { trail.style.borderColor = 'var(--primary-color)'; }); });
+
+        // Calendar to Text format
+        document.getElementById('timestamp_picker').addEventListener('change', function() {
+            if (!this.value) return;
+            const [datePart, timePart] = this.value.split('T');
+            const [year, month, day] = datePart.split('-');
+            document.getElementById('timestamp').value = `${day}-${month}-${year} ${timePart}`;
+        });
+
+        // 1. Manual Form Submit
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const btnText = document.getElementById('btnText'), spinner = document.getElementById('spinner'), submitBtn = document.getElementById('submitBtn'), toast = document.getElementById('toast');
+            btnText.style.display = 'none'; spinner.style.display = 'inline-block'; submitBtn.disabled = true;
+
+            const data = {
+                transaction_id: document.getElementById('transaction_id').value, sender_account_id: document.getElementById('sender_account_id').value,
+                recipient_account_id: document.getElementById('recipient_account_id').value, amount: document.getElementById('amount').value,
+                payment_mode: document.getElementById('payment_mode').value, timestamp: document.getElementById('timestamp').value, 
+                sender_location: document.getElementById('sender_location').value, recipient_location: document.getElementById('recipient_location').value,
+                device_fingerprint: document.getElementById('device_fingerprint').value, transaction_frequency: document.getElementById('transaction_frequency').value,
+                is_fraud: document.getElementById('is_fraud').value // <-- Captures Fraud vs Normal Label
+            };
+
+            fetch('/AddDataAction', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+            .then(res => res.json()).then(data => {
+                toast.style.display = 'block'; toast.style.backgroundColor = data.status === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(244, 63, 94, 0.1)';
+                toast.style.color = data.status === 'success' ? '#10b981' : '#f43f5e'; toast.innerHTML = data.message;
+                if(data.status === 'success') document.getElementById('transactionForm').reset();
+            }).finally(() => { btnText.style.display = 'inline-block'; spinner.style.display = 'none'; submitBtn.disabled = false; setTimeout(() => { toast.style.display = 'none'; }, 5000); });
+        });
+
+        // 2. 🔴 Fake Bank API Click Logic
+        document.getElementById('apiBtn').addEventListener('click', function() {
+            const apiBtnText = document.getElementById('apiBtnText'), apiSpinner = document.getElementById('apiSpinner'), apiBtn = document.getElementById('apiBtn'), toast = document.getElementById('toast');
+            apiBtnText.style.display = 'none'; apiSpinner.style.display = 'inline-block'; apiBtn.disabled = true;
+            toast.style.display = 'none';
+
+            fetch('/api/fetch_bank_api', { method: 'POST' })
+            .then(res => res.json()).then(data => {
+                toast.style.display = 'block'; toast.style.backgroundColor = 'rgba(16, 185, 129, 0.1)'; toast.style.color = '#10b981';
+                toast.innerHTML = data.message + " <br><a href='/AdminLogin' style='color:#0ea5e9; text-decoration:underline;'>Go to Dashboard to view Analytics.</a>";
+            }).catch(error => {
+                toast.style.display = 'block'; toast.style.backgroundColor = 'rgba(244, 63, 94, 0.1)'; toast.style.color = '#f43f5e'; toast.innerHTML = "API Connection Failed.";
+            }).finally(() => { apiBtnText.style.display = 'inline-block'; apiSpinner.style.display = 'none'; apiBtn.disabled = false; });
+        });
+    </script>
+</body>
+</html>
